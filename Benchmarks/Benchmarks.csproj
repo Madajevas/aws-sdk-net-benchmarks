@@ -13,6 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\fork\sdk\src\Core\AWSSDK.Core.NetStandard.csproj">
+      <Aliases>Forked</Aliases>
+    </ProjectReference>
+    <ProjectReference Include="..\fork\sdk\src\Services\SimpleEmail\AWSSDK.SimpleEmail.NetStandard.csproj">
+      <Aliases>Forked</Aliases>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

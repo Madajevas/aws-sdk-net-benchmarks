@@ -1,4 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿extern alias Forked;
+
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
@@ -36,5 +37,31 @@ public class RawMessageBenchmark
         message.Body = emailBody.ToMessageBody();
 
         this.mimeMessage = message;
+    }
+
+    [Benchmark]
+    public Forked::Amazon.Runtime.Internal.IRequest UsingMemoryStreamWithoutToArray()
+    {
+        using var stream = new MemoryStream();
+        mimeMessage.WriteTo(stream);
+        var sendRequest = new Forked::Amazon.SimpleEmail.Model.SendRawEmailRequest {
+            RawMessage = new Forked::Amazon.SimpleEmail.Model.RawMessage(stream)
+        };
+        var marshaller = new Forked::Amazon.SimpleEmail.Model.Internal.MarshallTransformations.SendRawEmailRequestMarshaller();
+        return marshaller.Marshall(sendRequest);
+    }
+
+    [Benchmark]
+    public Forked::Amazon.Runtime.Internal.IRequest UsingFileStream()
+    {
+        using var stream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 4096, FileOptions.DeleteOnClose);
+        mimeMessage.WriteTo(stream);
+        stream.Position = 0;
+        var sendRequest = new Forked::Amazon.SimpleEmail.Model.SendRawEmailRequest
+        {
+            RawMessage = new Forked::Amazon.SimpleEmail.Model.RawMessage(stream)
+        };
+        var marshaller = new Forked::Amazon.SimpleEmail.Model.Internal.MarshallTransformations.SendRawEmailRequestMarshaller();
+        return marshaller.Marshall(sendRequest);
     }
 }
