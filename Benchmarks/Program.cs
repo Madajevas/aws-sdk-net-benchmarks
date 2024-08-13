@@ -1,13 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using System.Net.Mail;
-
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 
 using MimeKit;
 
-using Org.BouncyCastle.Cms;
-
-Console.WriteLine("Hello, World!");
+BenchmarkRunner.Run<RawMessageBenchmark>();
 
 
 [MemoryDiagnoser]

@@ -4,15 +4,33 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fork", "fork", "{9F4E2F1B-B671-4B91-B7B2-7D63A8A816E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSSDK.SimpleEmail.NetStandard", "fork\sdk\src\Services\SimpleEmail\AWSSDK.SimpleEmail.NetStandard.csproj", "{7FCEB729-8854-47B9-B7FA-10A0B4C32E7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSSDK.Core.NetStandard", "fork\sdk\src\Core\AWSSDK.Core.NetStandard.csproj", "{F6214A85-6222-400B-A1D0-119CFF1D8BE8}"
+EndProject
 Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85EF31DB-516E-4614-A963-6533168AE85D}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7FCEB729-8854-47B9-B7FA-10A0B4C32E7E} = {9F4E2F1B-B671-4B91-B7B2-7D63A8A816E6}
+		{F6214A85-6222-400B-A1D0-119CFF1D8BE8} = {9F4E2F1B-B671-4B91-B7B2-7D63A8A816E6}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FCEB729-8854-47B9-B7FA-10A0B4C32E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FCEB729-8854-47B9-B7FA-10A0B4C32E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FCEB729-8854-47B9-B7FA-10A0B4C32E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FCEB729-8854-47B9-B7FA-10A0B4C32E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6214A85-6222-400B-A1D0-119CFF1D8BE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6214A85-6222-400B-A1D0-119CFF1D8BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6214A85-6222-400B-A1D0-119CFF1D8BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6214A85-6222-400B-A1D0-119CFF1D8BE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
