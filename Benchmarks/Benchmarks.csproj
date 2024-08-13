@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.Core" Version="3.7.400.4">
+      <Aliases>Original</Aliases>
+    </PackageReference>
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.400.4">
+      <Aliases>Original</Aliases>
+    </PackageReference>
     <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageReference Include="MimeKit" Version="4.7.1" />
   </ItemGroup>
