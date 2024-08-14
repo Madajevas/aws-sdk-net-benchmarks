@@ -1,6 +1,8 @@
 ﻿extern alias Forked;
 extern alias Original;
 
+using System.Text;
+
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
@@ -9,9 +11,11 @@ using MimeKit;
 
 //var bm = new RawMessageBenchmark();
 //bm.SetUp();
-//var original = bm.UsingMemoryStreamWithToArray();
-//var forked = bm.UsingMemoryStreamWithoutToArray();
-//System.Diagnostics.Debug.Assert(original.Parameters["RawMessage.Data"].Equals(forked.Parameters["RawMessage.Data"]), "Result should not have changed");
+//var original = (Original::Amazon.Runtime.Internal.IRequest)bm.UsingMemoryStreamWithToArray();
+//var forkedMemoryStream = (Forked::Amazon.Runtime.Internal.IRequest)bm.UsingMemoryStreamWithoutToArray();
+//var forkedFileStream = (Forked::Amazon.Runtime.Internal.IRequest)bm.UsingFileStream();
+//System.Diagnostics.Debug.Assert(original.Parameters["RawMessage.Data"].Equals(forkedMemoryStream.Parameters["RawMessage.Data"]), "Result should not have changed");
+//System.Diagnostics.Debug.Assert(original.Parameters["RawMessage.Data"].Equals(forkedFileStream.Parameters["RawMessage.Data"]), "Result should not have changed");
 //return;
 
 BenchmarkRunner.Run<RawMessageBenchmark>();
@@ -21,6 +25,8 @@ BenchmarkRunner.Run<RawMessageBenchmark>();
 public class RawMessageBenchmark
 {
     private MimeMessage mimeMessage;
+    private MemoryStream memoryStream;
+    private FileStream fileStream;
 
     [GlobalSetup]
     public void SetUp()
@@ -46,43 +52,55 @@ public class RawMessageBenchmark
         message.Body = emailBody.ToMessageBody();
 
         this.mimeMessage = message;
+
+
+        memoryStream = new MemoryStream();
+        mimeMessage.WriteTo(memoryStream);
+        memoryStream.Position = 0;
+
+        fileStream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 4096, FileOptions.DeleteOnClose);
+        mimeMessage.WriteTo(fileStream);
+        fileStream.Position = 0;
+    }
+
+    [GlobalCleanup]
+    public void Cleanup()
+    {
+        mimeMessage.Dispose();
+        memoryStream.Dispose();
+        fileStream.Dispose();
     }
 
     [Benchmark(Baseline = true)]
-    public Original::Amazon.Runtime.Internal.IRequest UsingMemoryStreamWithToArray()
+    public object/*Original::Amazon.Runtime.Internal.IRequest*/ UsingMemoryStreamWithToArray()
     {
-        using var stream = new MemoryStream();
-        mimeMessage.WriteTo(stream);
+        memoryStream.Position = 0;
         var sendRequest = new Original::Amazon.SimpleEmail.Model.SendRawEmailRequest
         {
-            RawMessage = new Original::Amazon.SimpleEmail.Model.RawMessage(stream)
+            RawMessage = new Original::Amazon.SimpleEmail.Model.RawMessage(memoryStream)
         };
         var marshaller = new Original::Amazon.SimpleEmail.Model.Internal.MarshallTransformations.SendRawEmailRequestMarshaller();
         return marshaller.Marshall(sendRequest);
     }
 
     [Benchmark]
-    public Forked::Amazon.Runtime.Internal.IRequest UsingMemoryStreamWithoutToArray()
+    public object/*Forked::Amazon.Runtime.Internal.IRequest*/ UsingMemoryStreamWithoutToArray()
     {
-        using var stream = new MemoryStream();
-        mimeMessage.WriteTo(stream);
-        stream.Position = 0;
+        memoryStream.Position = 0;
         var sendRequest = new Forked::Amazon.SimpleEmail.Model.SendRawEmailRequest {
-            RawMessage = new Forked::Amazon.SimpleEmail.Model.RawMessage(stream)
+            RawMessage = new Forked::Amazon.SimpleEmail.Model.RawMessage(memoryStream)
         };
         var marshaller = new Forked::Amazon.SimpleEmail.Model.Internal.MarshallTransformations.SendRawEmailRequestMarshaller();
         return marshaller.Marshall(sendRequest);
     }
 
     [Benchmark]
-    public Forked::Amazon.Runtime.Internal.IRequest UsingFileStream()
+    public object/*Forked::Amazon.Runtime.Internal.IRequest*/ UsingFileStream()
     {
-        using var stream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 4096, FileOptions.DeleteOnClose);
-        mimeMessage.WriteTo(stream);
-        stream.Position = 0;
+        fileStream.Position = 0;
         var sendRequest = new Forked::Amazon.SimpleEmail.Model.SendRawEmailRequest
         {
-            RawMessage = new Forked::Amazon.SimpleEmail.Model.RawMessage(stream)
+            RawMessage = new Forked::Amazon.SimpleEmail.Model.RawMessage(fileStream)
         };
         var marshaller = new Forked::Amazon.SimpleEmail.Model.Internal.MarshallTransformations.SendRawEmailRequestMarshaller();
         return marshaller.Marshall(sendRequest);
