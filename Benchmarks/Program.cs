@@ -1,37 +1,27 @@
 ﻿extern alias Forked;
 extern alias Original;
 
-using System.Text;
-
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
 using MimeKit;
 
 
-//var bm = new RawMessageBenchmark();
-//bm.SetUp();
-//var original = (Original::Amazon.Runtime.Internal.IRequest)bm.UsingMemoryStreamWithToArray();
-//var forkedMemoryStream = (Forked::Amazon.Runtime.Internal.IRequest)bm.UsingMemoryStreamWithoutToArray();
-//var forkedFileStream = (Forked::Amazon.Runtime.Internal.IRequest)bm.UsingFileStream();
-//System.Diagnostics.Debug.Assert(original.Parameters["RawMessage.Data"].Equals(forkedMemoryStream.Parameters["RawMessage.Data"]), "Result should not have changed");
-//System.Diagnostics.Debug.Assert(original.Parameters["RawMessage.Data"].Equals(forkedFileStream.Parameters["RawMessage.Data"]), "Result should not have changed");
-//return;
-
 BenchmarkRunner.Run<RawMessageBenchmark>();
 
 
 [MemoryDiagnoser]
+[SimpleJob(iterationCount: 10)]
+// [EtwProfiler]
 public class RawMessageBenchmark
 {
-    private MimeMessage mimeMessage;
     private MemoryStream memoryStream;
     private FileStream fileStream;
 
     [GlobalSetup]
     public void SetUp()
     {
-        var message = new MimeMessage();
+        using var message = new MimeMessage();
         message.From.Add(new MailboxAddress("Memory Test", "memory@test"));
         message.To.Add(new MailboxAddress("To #1", "to.1@test"));
         message.To.Add(new MailboxAddress("To #2", "to.2@test"));
@@ -51,22 +41,18 @@ public class RawMessageBenchmark
         emailBody.Attachments.Add("4.jpg", File.ReadAllBytes("./4.jpg"));
         message.Body = emailBody.ToMessageBody();
 
-        this.mimeMessage = message;
-
-
         memoryStream = new MemoryStream();
-        mimeMessage.WriteTo(memoryStream);
+        message.WriteTo(memoryStream);
         memoryStream.Position = 0;
 
         fileStream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 4096, FileOptions.DeleteOnClose);
-        mimeMessage.WriteTo(fileStream);
+        message.WriteTo(fileStream);
         fileStream.Position = 0;
     }
 
     [GlobalCleanup]
     public void Cleanup()
     {
-        mimeMessage.Dispose();
         memoryStream.Dispose();
         fileStream.Dispose();
     }

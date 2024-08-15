@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSSDK.SimpleEmail.NetStand
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSSDK.Core.NetStandard", "fork\sdk\src\Core\AWSSDK.Core.NetStandard.csproj", "{F6214A85-6222-400B-A1D0-119CFF1D8BE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{653A9CCE-2F3B-4C09-AC6E-0252A69F7659}"
+EndProject
 Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85EF31DB-516E-4614-A963-6533168AE85D}
@@ -19,6 +21,10 @@ Global
 		{F6214A85-6222-400B-A1D0-119CFF1D8BE8} = {9F4E2F1B-B671-4B91-B7B2-7D63A8A816E6}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{653A9CCE-2F3B-4C09-AC6E-0252A69F7659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{653A9CCE-2F3B-4C09-AC6E-0252A69F7659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{653A9CCE-2F3B-4C09-AC6E-0252A69F7659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{653A9CCE-2F3B-4C09-AC6E-0252A69F7659}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7692F9C5-1230-4AED-9E3C-AC82DDD8C80E}.Release|Any CPU.ActiveCfg = Release|Any CPU
